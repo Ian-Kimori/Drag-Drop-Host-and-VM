@@ -26,8 +26,6 @@ These MUST be installed before Guest Additions can compile:
 sudo apt install -y build-essential dkms linux-headers-$(uname -r)
 ```
 
-You already have them — good.
-
 ***
 
 # **STEP 3 — Remove any previously installed/failed Guest Additions**
