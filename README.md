@@ -88,6 +88,8 @@ If you get a permissions error:
 
 ```bash
 sudo chmod +x /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
+```
+```bash
 sudo /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
 ```
 
@@ -149,6 +151,8 @@ Inside Kali, run:
 
 ```bash
 VBoxClient --clipboard &
+```
+```bash
 VBoxClient --draganddrop &
 ```
 
