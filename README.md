@@ -1,26 +1,8 @@
-# Drag-Drop-Host-and-VM
-
-Here is the **cleanest, most correct, fully detailed START‑TO‑END guide** to properly install **VirtualBox Guest Additions** on Kali Linux **so that Copy‑Paste and Drag‑and‑Drop work** *without errors like VERR\_TIMEOUT*.
-
-This guide is written **specifically for your situation**, where the ISO auto‑mounted under:
-
-    /run/media/$USER/VBox_GAs_7.2.6
+# Drag & Drop Host-and-VM
 
 ***
 
-# ⭐ **COMPLETE STEP‑BY‑STEP SETUP (START → END)**
-
-### Works for:
-
-✔ Copy & Paste  
-✔ Drag & Drop  
-✔ Shared Clipboard  
-✔ Shared Folders (later if needed)  
-✔ Fixes all DnD: VERR\_TIMEOUT errors
-
-***
-
-# 🔵 **STEP 1 — Fully Update Kali Linux**
+# **STEP 1 — Fully Update Kali Linux**
 
 This prevents kernel/header mismatches:
 
@@ -32,7 +14,7 @@ sudo reboot
 
 ***
 
-# 🔵 **STEP 2 — Install all required build tools**
+# **STEP 2 — Install all required build tools**
 
 These MUST be installed before Guest Additions can compile:
 
@@ -44,7 +26,7 @@ You already have them — good.
 
 ***
 
-# 🔵 **STEP 3 — Remove any previously installed/failed Guest Additions**
+# **STEP 3 — Remove any previously installed/failed Guest Additions**
 
 Old/broken modules are the #1 cause of DnD failures.
 
@@ -55,7 +37,7 @@ sudo reboot
 
 ***
 
-# 🔵 **STEP 4 — Insert the Guest Additions ISO**
+# **STEP 4 — Insert the Guest Additions ISO**
 
 In the VirtualBox window top menu:
 
@@ -65,7 +47,7 @@ Wait a few seconds.
 
 ***
 
-# 🔵 **STEP 5 — Confirm where the ISO is mounted**
+# **STEP 5 — Confirm where the ISO is mounted**
 
 Your system already showed this:
 
@@ -95,7 +77,7 @@ You MUST see:
 
 ***
 
-# 🔵 **STEP 6 — Run the Guest Additions Installer from the CORRECT path**
+# **STEP 6 — Run the Guest Additions Installer from the CORRECT path**
 
 Since your ISO is auto‑mounted under `/run/media`, NOT `/mnt`, run:
 
@@ -120,7 +102,7 @@ You should see:
 
 ***
 
-# 🔵 **STEP 7 — Reboot Kali**
+# **STEP 7 — Reboot Kali**
 
 ```bash
 sudo reboot
@@ -128,7 +110,7 @@ sudo reboot
 
 ***
 
-# 🔵 **STEP 8 — Ensure you’re using X11 (NOT Wayland)**
+# **STEP 8 — Ensure you’re using X11 (NOT Wayland)**
 
 VirtualBox DnD does **not** work on Wayland.
 
@@ -147,7 +129,7 @@ If you see `wayland`:
 
 ***
 
-# 🔵 **STEP 9 — Enable Clipboard + Drag‑and‑Drop in VirtualBox settings**
+# **STEP 9 — Enable Clipboard + Drag‑and‑Drop in VirtualBox settings**
 
 ### Shut down the VM → open VirtualBox settings:
 
@@ -162,7 +144,7 @@ Click OK → start VM.
 
 ***
 
-# 🔵 **STEP 10 — Start DnD/Clipboard Services (Important)**
+# **STEP 10 — Start DnD/Clipboard Services (Important)**
 
 Inside Kali, run:
 
@@ -175,7 +157,7 @@ No output = GOOD.
 
 ***
 
-# 🔵 **STEP 11 — TEST FUNCTIONALITY**
+# **STEP 11 — TEST FUNCTIONALITY**
 
 ### Test copy/paste:
 
@@ -191,7 +173,7 @@ No more timeout errors.
 
 ***
 
-# 🎯 **YOU ARE DONE**
+# **YOU ARE DONE**
 
 If you followed all 11 steps, you now have:
 
@@ -202,11 +184,6 @@ If you followed all 11 steps, you now have:
 ✔ No “command not found”
 
 ***
-
-# ✋ If something still fails
-
-Run these 3 commands and paste the output for diagnosis:
-
 ```bash
 lsmod | grep vbox
 VBoxClient --version
