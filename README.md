@@ -8,7 +8,11 @@ This prevents kernel/header mismatches:
 
 ```bash
 sudo apt update
+```
+```bash
 sudo apt full-upgrade -y
+```
+```bash
 sudo reboot
 ```
 
