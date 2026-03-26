@@ -51,11 +51,9 @@ Wait a few seconds.
 ***
 
 # **STEP 5 — Confirm where the ISO is mounted**
-
-Your system already showed this:
-
+```bash
     /run/media/$USER/VBox_GAs_7.2.6
-
+```
 Verify:
 
 ```bash
