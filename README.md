@@ -171,22 +171,3 @@ No output = GOOD.
 No more timeout errors.
 
 ***
-
-# **YOU ARE DONE**
-
-If you followed all 11 steps, you now have:
-
-✔ Drag & Drop working  
-✔ Clipboard working  
-✔ Guest Additions correctly installed  
-✔ No VERR\_TIMEOUT  
-✔ No “command not found”
-
-***
-```bash
-lsmod | grep vbox
-VBoxClient --version
-echo $XDG_SESSION_TYPE
-```
-
-I will tell you EXACTLY what is wrong and fix it.
