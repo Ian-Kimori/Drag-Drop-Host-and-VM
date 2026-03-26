@@ -34,9 +34,10 @@ Old/broken modules are the #1 cause of DnD failures.
 
 ```bash
 sudo apt purge virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest-dkms -y
+```
+```bash
 sudo reboot
 ```
-
 ***
 
 # **STEP 4 — Insert the Guest Additions ISO**
