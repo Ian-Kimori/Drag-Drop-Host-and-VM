@@ -1,7 +1,5 @@
 # Drag & Drop Host-and-VM
 
-***
-
 ## **Step 1 — Fully Update Kali Linux**
 
 This prevents kernel/header mismatches:
