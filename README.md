@@ -2,7 +2,7 @@
 
 ***
 
-# **STEP 1 — Fully Update Kali Linux**
+## **Step 1 — Fully Update Kali Linux**
 
 This prevents kernel/header mismatches:
 
@@ -18,7 +18,7 @@ sudo reboot
 
 ***
 
-# **STEP 2 — Install all required build tools**
+## **Step 2 — Install all required build tools**
 
 These MUST be installed before Guest Additions can compile:
 
@@ -28,7 +28,7 @@ sudo apt install -y build-essential dkms linux-headers-$(uname -r)
 
 ***
 
-# **STEP 3 — Remove any previously installed/failed Guest Additions**
+## **Step 3 — Remove any previously installed/failed Guest Additions**
 
 Old/broken modules are the #1 cause of DnD failures.
 
@@ -40,7 +40,7 @@ sudo reboot
 ```
 ***
 
-# **STEP 4 — Insert the Guest Additions ISO**
+## **Step 4 — Insert the Guest Additions ISO**
 
 In the VirtualBox window top menu:
 
@@ -50,7 +50,7 @@ Wait a few seconds.
 
 ***
 
-# **STEP 5 — Confirm where the ISO is mounted**
+## **Step 5 — Confirm where the ISO is mounted**
 
 Verify:
 
@@ -76,7 +76,7 @@ You MUST see:
 
 ***
 
-# **STEP 6 — Run the Guest Additions Installer from the CORRECT path**
+## **Step 6 — Run the Guest Additions Installer from the CORRECT path**
 
 Since your ISO is auto‑mounted under `/run/media`, NOT `/mnt`, run:
 
@@ -103,7 +103,7 @@ You should see:
 
 ***
 
-# **STEP 7 — Reboot Kali**
+## **Step 7 — Reboot Kali**
 
 ```bash
 sudo reboot
@@ -111,7 +111,7 @@ sudo reboot
 
 ***
 
-# **STEP 8 — Ensure you’re using X11 (NOT Wayland)**
+## **Step 8 — Ensure you’re using X11 (NOT Wayland)**
 
 VirtualBox DnD does **not** work on Wayland.
 
@@ -130,7 +130,7 @@ If you see `wayland`:
 
 ***
 
-# **STEP 9 — Enable Clipboard + Drag‑and‑Drop in VirtualBox settings**
+## **Step 9 — Enable Clipboard + Drag‑and‑Drop in VirtualBox settings**
 
 ### Shut down the VM → open VirtualBox settings:
 
@@ -145,7 +145,7 @@ Click OK → start VM.
 
 ***
 
-# **STEP 10 — Start DnD/Clipboard Services (Important)**
+## **Step 10 — Start DnD/Clipboard Services (Important)**
 
 Inside Kali, run:
 
@@ -160,7 +160,7 @@ No output = GOOD.
 
 ***
 
-# **STEP 11 — TEST FUNCTIONALITY**
+## **Step 11 — TEST FUNCTIONALITY**
 
 ### Test copy/paste:
 
