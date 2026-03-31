@@ -160,7 +160,7 @@ No output = GOOD.
 
 ***
 
-## **Step 11 — TEST FUNCTIONALITY**
+## **Step 11 — Test Functionality**
 
 ### Test copy/paste:
 
