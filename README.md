@@ -2,8 +2,6 @@
 
 ## Step 1 — Fully Update Kali Linux
 
-This prevents kernel/header mismatches:
-
 ```bash
 sudo apt update
 ```
@@ -18,8 +16,6 @@ sudo reboot
 
 ## Step 2 — Install all required build tools
 
-These MUST be installed before Guest Additions can compile:
-
 ```bash
 sudo apt install -y build-essential dkms linux-headers-$(uname -r)
 ```
@@ -27,8 +23,6 @@ sudo apt install -y build-essential dkms linux-headers-$(uname -r)
 ---
 
 ## Step 3 — Remove any previously installed/failed Guest Additions
-
-Old/broken modules are the #1 cause of DnD failures.
 
 ```bash
 sudo apt purge virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest-dkms -y
@@ -41,7 +35,7 @@ sudo reboot
 
 ## Step 4 — Enable Clipboard + Drag-and-Drop in VirtualBox settings
 
-**Before booting the VM**, shut it down and open VirtualBox settings:
+Shut down the VM first, then:
 
 ```
 Settings → General → Advanced
@@ -55,25 +49,36 @@ Click OK → start VM.
 
 ---
 
-## Step 5 — Ensure you're using X11 (NOT Wayland)
-
-VirtualBox DnD does **not** work on Wayland.
+## Step 5 — Ensure you're on X11 (NOT Wayland)
 
 ```bash
 echo $XDG_SESSION_TYPE
 ```
 
-If you see `wayland`:
+Must output `x11`. If it says `wayland`:
 1. Log out
-2. On login screen, click the ⚙️ icon
-3. Choose **X11** or **Xorg Session**
-4. Log in again
+2. Click ⚙️ on login screen
+3. Select **Xorg Session**
+4. Log back in
 
 ---
 
-## Step 6 — Insert the Guest Additions ISO
+## Step 6 — Check if Guest Additions are already installed
 
-In the VirtualBox window top menu:
+Before touching the ISO, check if they're already present:
+
+```bash
+lsmod | grep vboxguest
+```
+```bash
+VBoxClient --version
+```
+
+If both return output, **skip Steps 7–10** and go straight to Step 11.
+
+---
+
+## Step 7 — Insert the Guest Additions ISO
 
 ```
 Devices → Insert Guest Additions CD Image…
@@ -83,53 +88,47 @@ Wait a few seconds.
 
 ---
 
-## Step 7 — Confirm where the ISO is mounted
+## Step 8 — Confirm where the ISO mounted
 
 ```bash
 ls /run/media/$USER/
 ```
 
-You should see:
-
+Expected output:
 ```
-VBox_GAs_7.2.6
+VBox_GAs_7.x.x
 ```
 
-Now list it:
-
+If you get `No such file or directory`, check alternate locations:
 ```bash
-ls /run/media/$USER/VBox_GAs_7.2.6
+lsblk
+```
+```bash
+findmnt | grep -i vbox
 ```
 
-You MUST see:
-
-```
-VBoxLinuxAdditions.run
-autorun.sh
-cert/
-```
+If it shows up elsewhere (e.g. `/media/cdrom`), use that path in Step 9.
 
 ---
 
-## Step 8 — Run the Guest Additions Installer from the CORRECT path
-
-Since your ISO is auto-mounted under `/run/media`, NOT `/mnt`, run:
+## Step 9 — Run the installer
 
 ```bash
-sudo bash /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
+sudo bash /run/media/$USER/VBox_GAs_*/VBoxLinuxAdditions.run
 ```
 
-If you get a permissions error:
-
+If that path doesn't exist, fallback:
 ```bash
-sudo chmod +x /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
+sudo mkdir -p /media/cdrom
 ```
 ```bash
-sudo /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
+sudo mount /dev/cdrom /media/cdrom
+```
+```bash
+sudo sh /media/cdrom/VBoxLinuxAdditions.run
 ```
 
-Let it run completely. You should see:
-
+Expected output:
 ```
 ✔ Building kernel modules
 ✔ Installing Guest Additions
@@ -138,24 +137,7 @@ Let it run completely. You should see:
 
 ---
 
-## Step 9 — Mount and install (if Step 8 fails)
-
-```bash
-sudo mkdir /media/cdrom
-```
-```bash
-sudo mount /dev/cdrom /media/cdrom
-```
-```bash
-cd /media/cdrom
-```
-```bash
-sudo sh VBoxLinuxAdditions.run
-```
-
----
-
-## Step 10 — Reboot Kali
+## Step 10 — Reboot
 
 ```bash
 sudo reboot
@@ -164,8 +146,6 @@ sudo reboot
 ---
 
 ## Step 11 — Start DnD/Clipboard Services
-
-Inside Kali, run:
 
 ```bash
 VBoxClient --clipboard &
@@ -178,31 +158,33 @@ No output = GOOD.
 
 ---
 
-## Step 12 — Create Shared Folder in VirtualBox
+## Step 12 — Test Functionality
 
-On Windows:
+### Copy/paste:
+- Copy text from host → paste in VM
+- Copy text from VM → paste to host
 
-1. Open VirtualBox
-2. Select Kali VM → **Settings**
-3. Go to **Shared Folders**
-4. Click ➕
-5. Choose a Windows folder (e.g. `C:\Users\Ian\Desktop\shared`)
-6. Check:
-   - ✅ Auto-mount
-   - ✅ Make permanent
+### Drag-and-drop:
+- Drag a file from Windows → into Kali VM window
+- Drag a file from Kali → to Windows desktop
 
-### (i): Access in Kali
+---
 
-```bash
-ls /media
-```
-Or:
+## Step 13 — Shared Folder Setup
+
+On Windows, open VirtualBox:
+
+1. Select Kali VM → **Settings → Shared Folders**
+2. Click ➕
+3. Choose a folder (e.g. `C:\Users\Ian\Desktop\shared`)
+4. Check ✅ Auto-mount and ✅ Make permanent
+
+### Access in Kali:
 ```bash
 ls /media/sf_shared
 ```
 
-### (ii): If permission denied
-
+### If permission denied:
 ```bash
 sudo usermod -aG vboxsf $USER
 ```
@@ -212,12 +194,24 @@ reboot
 
 ---
 
-## Step 13 — USB Method (Fallback)
+## Step 14 — SCP Method (Hacker Style Alternative)
 
-1. Plug USB
-2. Attach it to VM: `Devices → USB → Select device`
+### On Kali:
+```bash
+ip a   # get your IP e.g. 192.168.x.x
+```
 
-Then in Kali:
+### On Windows PowerShell:
+```powershell
+scp kali@192.168.x.x:/home/kali/file.txt C:\Users\Ian\Desktop
+```
+
+---
+
+## Step 15 — USB Fallback
+
+1. Plug in USB
+2. `Devices → USB → Select device`
 
 ```bash
 lsblk
@@ -225,41 +219,3 @@ lsblk
 ```bash
 sudo mount /dev/sdb1 /mnt
 ```
-
----
-
-## Step 14 — SCP Method (Advanced / Hacker Style)
-
-If Kali has network access:
-
-### On Kali:
-```bash
-ip a
-```
-Get IP (e.g. `192.168.x.x`)
-
-### On Windows (PowerShell):
-```powershell
-scp kali@192.168.x.x:/home/kali/file.txt C:\Users\Ian\Desktop
-```
-
----
-
-## Step 15 — Test Functionality
-
-### Test copy/paste:
-- Copy text from host → paste in VM
-- Copy text from VM → paste to host
-
-### Test drag-and-drop:
-- Drag a file from host → into VM
-- Drag a file from VM → to host desktop
-
----
-
-**Key changes made:**
-- Step 4 (VirtualBox settings) moved before booting — you can't change these while the VM is running
-- Step 5 (X11 check) moved before inserting the ISO — no point installing if Wayland will break DnD anyway
-- Step 9 (manual mount fallback) placed immediately after Step 8 as a fallback
-- Step 11 (start services) moved right after reboot where it logically belongs
-- Everything else preserved exactly as written
