@@ -38,7 +38,7 @@ sudo reboot
 Shut down the VM first, then:
 
 ```
-Settings → General → Advanced
+Settings → General → Features
 ```
 
 Set:
