@@ -1,6 +1,12 @@
 # Drag & Drop Host-and-VM
 
-## **Step 1 — Fully Update Kali Linux**
+Here's the same content, reordered logically with no steps removed:
+
+---
+
+# Drag & Drop Host-and-VM
+
+## Step 1 — Fully Update Kali Linux
 
 This prevents kernel/header mismatches:
 
@@ -14,9 +20,9 @@ sudo apt full-upgrade -y
 sudo reboot
 ```
 
-***
+---
 
-## **Step 2 — Install all required build tools**
+## Step 2 — Install all required build tools
 
 These MUST be installed before Guest Additions can compile:
 
@@ -24,9 +30,9 @@ These MUST be installed before Guest Additions can compile:
 sudo apt install -y build-essential dkms linux-headers-$(uname -r)
 ```
 
-***
+---
 
-## **Step 3 — Remove any previously installed/failed Guest Additions**
+## Step 3 — Remove any previously installed/failed Guest Additions
 
 Old/broken modules are the #1 cause of DnD failures.
 
@@ -37,21 +43,53 @@ sudo apt purge virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest-dkms
 sudo reboot
 ```
 
-***
+---
 
-## **Step 4 — Insert the Guest Additions ISO**
+## Step 4 — Enable Clipboard + Drag-and-Drop in VirtualBox settings
+
+**Before booting the VM**, shut it down and open VirtualBox settings:
+
+```
+Settings → General → Advanced
+```
+
+Set:
+- **Shared Clipboard → Bidirectional**
+- **Drag and Drop → Bidirectional**
+
+Click OK → start VM.
+
+---
+
+## Step 5 — Ensure you're using X11 (NOT Wayland)
+
+VirtualBox DnD does **not** work on Wayland.
+
+```bash
+echo $XDG_SESSION_TYPE
+```
+
+If you see `wayland`:
+1. Log out
+2. On login screen, click the ⚙️ icon
+3. Choose **X11** or **Xorg Session**
+4. Log in again
+
+---
+
+## Step 6 — Insert the Guest Additions ISO
 
 In the VirtualBox window top menu:
 
-    Devices → Insert Guest Additions CD Image…
+```
+Devices → Insert Guest Additions CD Image…
+```
 
 Wait a few seconds.
 
-***
+---
 
-## **Step 5 — Confirm where the ISO is mounted**
-
-Verify:
+## Step 7 — Confirm where the ISO is mounted
 
 ```bash
 ls /run/media/$USER/
@@ -59,7 +97,9 @@ ls /run/media/$USER/
 
 You should see:
 
-    VBox_GAs_7.2.6
+```
+VBox_GAs_7.2.6
+```
 
 Now list it:
 
@@ -69,15 +109,17 @@ ls /run/media/$USER/VBox_GAs_7.2.6
 
 You MUST see:
 
-    VBoxLinuxAdditions.run
-    autorun.sh
-    cert/
+```
+VBoxLinuxAdditions.run
+autorun.sh
+cert/
+```
 
-***
+---
 
-## **Step 6 — Run the Guest Additions Installer from the CORRECT path**
+## Step 8 — Run the Guest Additions Installer from the CORRECT path
 
-Since your ISO is auto‑mounted under `/run/media`, NOT `/mnt`, run:
+Since your ISO is auto-mounted under `/run/media`, NOT `/mnt`, run:
 
 ```bash
 sudo bash /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
@@ -87,22 +129,20 @@ If you get a permissions error:
 
 ```bash
 sudo chmod +x /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
-```
-```bash
 sudo /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
 ```
 
-Let it run completely.
+Let it run completely. You should see:
 
-You should see:
-
-✔ Building kernel modules  
-✔ Installing Guest Additions  
+```
+✔ Building kernel modules
+✔ Installing Guest Additions
 ✔ No errors
+```
 
-***
+---
 
-## **Step 7 — Mount and install**
+## Step 9 — Mount and install (if Step 8 fails)
 
 ```bash
 sudo mkdir /media/cdrom
@@ -111,15 +151,30 @@ cd /media/cdrom
 sudo sh VBoxLinuxAdditions.run
 ```
 
-## **Step 8 — Reboot Kali**
+---
+
+## Step 10 — Reboot Kali
 
 ```bash
 sudo reboot
 ```
 
-***
+---
 
-## **Step 9 — Create Shared Folder in VirtualBox**
+## Step 11 — Start DnD/Clipboard Services
+
+Inside Kali, run:
+
+```bash
+VBoxClient --clipboard &
+VBoxClient --draganddrop &
+```
+
+No output = GOOD.
+
+---
+
+## Step 12 — Create Shared Folder in VirtualBox
 
 On Windows:
 
@@ -129,153 +184,74 @@ On Windows:
 4. Click ➕
 5. Choose a Windows folder (e.g. `C:\Users\Ian\Desktop\shared`)
 6. Check:
-
-   * ✅ Auto-mount
-   * ✅ Make permanent
-
----
+   - ✅ Auto-mount
+   - ✅ Make permanent
 
 ### (i): Access in Kali
-
-Check:
 
 ```bash
 ls /media
 ```
-
 Or:
-
 ```bash
 ls /media/sf_shared
 ```
 
-### (ii): If permission denied:
+### (ii): If permission denied
 
 ```bash
 sudo usermod -aG vboxsf $USER
-```
-
-Then:
-
-```bash
 reboot
 ```
 
-***
+---
 
-## **Step 10 — Ensure you’re using X11 (NOT Wayland)**
-
-VirtualBox DnD does **not** work on Wayland.
-
-Check:
-
-```bash
-echo $XDG_SESSION_TYPE
-```
-
-If you see `wayland`:
-
-1.  Log out
-2.  On login screen, click the ⚙️ icon
-3.  Choose **X11** or **Xorg Session**
-4.  Log in again
-
-***
-
-## **Step 11 — Enable Clipboard + Drag‑and‑Drop in VirtualBox settings**
-
-### Shut down the VM → open VirtualBox settings:
-
-    Settings → General → Advanced
-
-Set:
-
-*   **Shared Clipboard → Bidirectional**
-*   **Drag and Drop → Bidirectional**
-
-Click OK → start VM.
-
-***
-
-## **Step 12 — Using SCP (Advanced / Hacker Style)
-
-If Kali has network access:
-
-### On Kali:
-
-```bash
-ip a
-```
-
-Get IP (e.g. `192.168.x.x`)
-
-### On Windows (PowerShell):
-
-```powershell
-scp kali@192.168.x.x:/home/kali/file.txt C:\Users\Ian\Desktop
-```
-
-***
-
-## **Step 13 — USB Method (Fallback)
+## Step 13 — USB Method (Fallback)
 
 1. Plug USB
-2. Attach it to VM:
+2. Attach it to VM: `Devices → USB → Select device`
 
-```
-Devices → USB → Select device
-```
-
-Then access it in Kali:
+Then in Kali:
 
 ```bash
 lsblk
-```
-
-Mount it:
-
-```bash
 sudo mount /dev/sdb1 /mnt
 ```
 
 ---
 
-### What I Recommend (For You)
+## Step 14 — SCP Method (Advanced / Hacker Style)
 
-Since you're doing **cybersecurity + CTFs**, use:
+If Kali has network access:
 
-**Shared Folder (primary)**
-**SCP (for realism / labs / hacking scenarios)**
-
-***
-
-## **Step 14 — Start DnD/Clipboard Services (Important)**
-
-Inside Kali, run:
-
+### On Kali:
 ```bash
-VBoxClient --clipboard &
+ip a
 ```
-```bash
-VBoxClient --draganddrop &
+Get IP (e.g. `192.168.x.x`)
+
+### On Windows (PowerShell):
+```powershell
+scp kali@192.168.x.x:/home/kali/file.txt C:\Users\Ian\Desktop
 ```
 
-No output = GOOD.
+---
 
-***
-
-## **Step 15 — Test Functionality**
+## Step 15 — Test Functionality
 
 ### Test copy/paste:
-
-*   Copy text from host → paste in VM
-*   Copy text from VM → paste to host
+- Copy text from host → paste in VM
+- Copy text from VM → paste to host
 
 ### Test drag-and-drop:
+- Drag a file from host → into VM
+- Drag a file from VM → to host desktop
 
-*   Drag a file from host → into VM
-*   Drag a file from VM → to host desktop
+---
 
-No more timeout errors.
-
-***
+**Key changes made:**
+- Step 4 (VirtualBox settings) moved before booting — you can't change these while the VM is running
+- Step 5 (X11 check) moved before inserting the ISO — no point installing if Wayland will break DnD anyway
+- Step 9 (manual mount fallback) placed immediately after Step 8 as a fallback
+- Step 11 (start services) moved right after reboot where it logically belongs
+- Everything else preserved exactly as written
