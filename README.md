@@ -123,6 +123,8 @@ If you get a permissions error:
 
 ```bash
 sudo chmod +x /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
+```
+```bash
 sudo /run/media/$USER/VBox_GAs_7.2.6/VBoxLinuxAdditions.run
 ```
 
@@ -140,8 +142,14 @@ Let it run completely. You should see:
 
 ```bash
 sudo mkdir /media/cdrom
+```
+```bash
 sudo mount /dev/cdrom /media/cdrom
+```
+```bash
 cd /media/cdrom
+```
+```bash
 sudo sh VBoxLinuxAdditions.run
 ```
 
@@ -161,6 +169,8 @@ Inside Kali, run:
 
 ```bash
 VBoxClient --clipboard &
+```
+```bash
 VBoxClient --draganddrop &
 ```
 
@@ -195,6 +205,8 @@ ls /media/sf_shared
 
 ```bash
 sudo usermod -aG vboxsf $USER
+```
+```bash
 reboot
 ```
 
@@ -209,6 +221,8 @@ Then in Kali:
 
 ```bash
 lsblk
+```
+```bash
 sudo mount /dev/sdb1 /mnt
 ```
 
