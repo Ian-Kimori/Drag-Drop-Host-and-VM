@@ -36,6 +36,7 @@ sudo apt purge virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest-dkms
 ```bash
 sudo reboot
 ```
+
 ***
 
 ## **Step 4 — Insert the Guest Additions ISO**
@@ -101,7 +102,16 @@ You should see:
 
 ***
 
-## **Step 7 — Reboot Kali**
+## **Step 7 — Mount and install**
+
+```bash
+sudo mkdir /media/cdrom
+sudo mount /dev/cdrom /media/cdrom
+cd /media/cdrom
+sudo sh VBoxLinuxAdditions.run
+```
+
+## **Step 8 — Reboot Kali**
 
 ```bash
 sudo reboot
@@ -109,7 +119,51 @@ sudo reboot
 
 ***
 
-## **Step 8 — Ensure you’re using X11 (NOT Wayland)**
+## **Step 9 — Create Shared Folder in VirtualBox**
+
+On Windows:
+
+1. Open VirtualBox
+2. Select Kali VM → **Settings**
+3. Go to **Shared Folders**
+4. Click ➕
+5. Choose a Windows folder (e.g. `C:\Users\Ian\Desktop\shared`)
+6. Check:
+
+   * ✅ Auto-mount
+   * ✅ Make permanent
+
+---
+
+### (i): Access in Kali
+
+Check:
+
+```bash
+ls /media
+```
+
+Or:
+
+```bash
+ls /media/sf_shared
+```
+
+### (ii): If permission denied:
+
+```bash
+sudo usermod -aG vboxsf $USER
+```
+
+Then:
+
+```bash
+reboot
+```
+
+***
+
+## **Step 10 — Ensure you’re using X11 (NOT Wayland)**
 
 VirtualBox DnD does **not** work on Wayland.
 
@@ -128,7 +182,7 @@ If you see `wayland`:
 
 ***
 
-## **Step 9 — Enable Clipboard + Drag‑and‑Drop in VirtualBox settings**
+## **Step 11 — Enable Clipboard + Drag‑and‑Drop in VirtualBox settings**
 
 ### Shut down the VM → open VirtualBox settings:
 
@@ -143,7 +197,59 @@ Click OK → start VM.
 
 ***
 
-## **Step 10 — Start DnD/Clipboard Services (Important)**
+## **Step 12 — Using SCP (Advanced / Hacker Style)
+
+If Kali has network access:
+
+### On Kali:
+
+```bash
+ip a
+```
+
+Get IP (e.g. `192.168.x.x`)
+
+### On Windows (PowerShell):
+
+```powershell
+scp kali@192.168.x.x:/home/kali/file.txt C:\Users\Ian\Desktop
+```
+
+***
+
+## **Step 13 — USB Method (Fallback)
+
+1. Plug USB
+2. Attach it to VM:
+
+```
+Devices → USB → Select device
+```
+
+Then access it in Kali:
+
+```bash
+lsblk
+```
+
+Mount it:
+
+```bash
+sudo mount /dev/sdb1 /mnt
+```
+
+---
+
+### What I Recommend (For You)
+
+Since you're doing **cybersecurity + CTFs**, use:
+
+**Shared Folder (primary)**
+**SCP (for realism / labs / hacking scenarios)**
+
+***
+
+## **Step 14 — Start DnD/Clipboard Services (Important)**
 
 Inside Kali, run:
 
@@ -158,7 +264,7 @@ No output = GOOD.
 
 ***
 
-## **Step 11 — Test Functionality**
+## **Step 15 — Test Functionality**
 
 ### Test copy/paste:
 
